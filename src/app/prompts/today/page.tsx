@@ -1,16 +1,18 @@
                                                       'use client'
 
-import { 
-  Box, 
-  Container, 
-  Heading, 
-  Text, 
-  VStack, 
-  Button, 
+import {
+  Box,
+  Container,
+  Heading,
+  Text,
+  VStack,
+  Button,
+  IconButton,
   Badge,
   HStack,
   SimpleGrid,
-  Avatar
+  Avatar,
+  Flex
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
@@ -344,7 +346,6 @@ export default function TodayPrompt() {
                   <div className="text-center">
                     <Text
                       className="text-white text-3xl font-bold bg-gradient-to-r from-white via-purple-100 to-violet-100 bg-clip-text text-transparent"
-                      style={{ fontFamily: 'Times, "Times New Roman", serif' }}
                     >
                       Daily Creative Challenge
                     </Text>
@@ -362,10 +363,10 @@ export default function TodayPrompt() {
             <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
               <div className="text-center mb-6">
                 <Heading
-                  size="4xl"
+                  size="5xl"
+                  mb={4}
                   className="text-white font-bold bg-gradient-to-r from-white via-purple-200 to-violet-200 bg-clip-text text-transparent"
                   textAlign="center"
-                  style={{ fontFamily: 'Times, "Times New Roman", serif' }}
                 >
                   {prompt.title}
                 </Heading>
@@ -378,14 +379,13 @@ export default function TodayPrompt() {
                 </MotionDiv>
                 <Text
                   className="text-purple-200 text-lg mt-3 uppercase tracking-widest"
-                  style={{ fontFamily: 'Times, "Times New Roman", serif' }}
                 >
                   {prompt.category.name}
                 </Text>
               </div>
             </MotionDiv>
             
-            <HStack justify="center" spacing={8} className="text-purple-200" flexWrap="wrap">
+            <HStack justify="center" spacing={{ base: 4, md: 8 }} wrap="wrap" color="purple.200" mb={6}>
               <MotionDiv initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
                 <div className="flex items-center gap-3 backdrop-blur-sm bg-white/10 px-4 py-2 rounded-full border border-white/20">
                   <Calendar size={18} />
@@ -520,7 +520,6 @@ export default function TodayPrompt() {
                       className="text-white leading-relaxed font-medium text-center"
                       lineHeight="1.6"
                       transition="all 0.7s ease"
-                      style={{ fontFamily: 'Times, "Times New Roman", serif' }}
                     >
                       {showSubmissions ? prompt.description : displayedText}
                       {!showSubmissions && isTyping && (
@@ -550,57 +549,20 @@ export default function TodayPrompt() {
                       marginTop: '2rem'
                     }}
                   >
-                    <div
-                      style={{
-                        cursor: 'pointer',
-                        zIndex: 50,
-                        position: 'relative'
-                      }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log('Arrow button clicked!');
-                        console.log('Current showSubmissions state:', showSubmissions);
-                        console.log('Current submissions:', submissions);
-                        console.log('Submissions length:', submissions.length);
-                        setShowSubmissions(true);
-                        console.log('Setting showSubmissions to true');
-                      }}
+                    <MotionDiv
+                      initial={{ opacity: 0, y: 50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.2, duration: 0.8 }}
                     >
-                      <motion.div
-                        whileHover={{ scale: 1.1, y: -5 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                      <div className="relative group">
-                        <div
-                          style={{
-                            position: 'absolute',
-                            inset: '-12px',
-                            background: 'linear-gradient(to right, rgba(168, 85, 247, 0.5), rgba(139, 92, 246, 0.5))',
-                            borderRadius: '50%',
-                            filter: 'blur(1rem)',
-                            opacity: 0,
-                            transition: 'opacity 0.3s ease'
-                          }}
-                          className="group-hover:opacity-100"
-                        />
-                        <div className="relative backdrop-blur-xl bg-gradient-to-r from-white/20 to-white/10 border-2 border-white/30 rounded-full p-6 shadow-xl" style={{ backgroundColor: 'rgba(168, 85, 247, 0.3)' }}>
-                          <MotionDiv
-                            animate={{
-                              y: [0, 8, 0],
-                              rotate: [0, 5, -5, 0]
-                            }}
-                            transition={{
-                              y: { duration: 2, repeat: Infinity },
-                              rotate: { duration: 4, repeat: Infinity }
-                            }}
-                          >
-                            <ChevronDown size={40} className="text-white" />
-                          </MotionDiv>
-                        </div>
-                      </div>
-                      </motion.div>
-                    </div>
+                      <IconButton
+                        aria-label="Explore Submissions"
+                        icon={<ChevronDown size={40} />}
+                        onClick={() => setShowSubmissions(true)}
+                        variant="outline"
+                        colorScheme="purple"
+                        size="lg"
+                      />
+                    </MotionDiv>
                     
                     <MotionDiv
                       initial={{ opacity: 0 }}
@@ -761,50 +723,16 @@ export default function TodayPrompt() {
             )}
           </AnimatePresence>
 
-          {/* Submit Your Response */}
-          <AnimatePresence>
-            {showSubmissions && (
-              <MotionBox
-                initial={{ opacity: 0, y: 100, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -50, scale: 0.9 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              >
-                <VStack spacing={6} align="stretch">
-                  <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.6 }}>
-                    <div className="text-center">
-                      <Heading size="xl" className="text-white mb-4">
-                        Submit Your Response
-                      </Heading>
-                    </div>
-                  </MotionDiv>
-
-                  <MotionDiv initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.8 }}>
-                    <div className="backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-2xl p-8 shadow-xl">
-                      <VStack spacing={4} align="stretch">
-                        <textarea
-                          placeholder="Share your creative response..."
-                          className="w-full h-32 bg-transparent border border-white/20 rounded-lg px-4 py-3 text-white placeholder-purple-300 resize-none focus:outline-none focus:border-purple-400/50 focus:ring-2 focus:ring-purple-400/20"
-                        />
-                        <div className="flex justify-end">
-                          <MotionDiv whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Link href="/prompts/today/submit">
-                              <Button
-                                size="lg"
-                                className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white border-0 px-8 py-3 font-semibold shadow-xl"
-                              >
-                                Post Response
-                              </Button>
-                            </Link>
-                          </MotionDiv>
-                        </div>
-                      </VStack>
-                    </div>
-                  </MotionDiv>
-                </VStack>
-              </MotionBox>
-            )}
-          </AnimatePresence>
+          {/* Post Response CTA */}
+          {showSubmissions && (
+            <Flex justify="center" mt={8}>
+              <Link href="/prompts/today/submit">
+                <Button colorScheme="purple" size="lg">
+                  + Post Response
+                </Button>
+              </Link>
+            </Flex>
+          )}
         </VStack>
       </Container>
     </Box>
